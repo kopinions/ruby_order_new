@@ -3,11 +3,8 @@
   user: vagrant
   sudo: True
   tasks:
-    - name: update env 
-      apt: update_cache=yes 
-
     - name: install postgres
-      apt: pkg={{item}} state=present
+      apt: pkg={{item}} state=present update-cache=false
       with_items:
         - postgresql
         - postgresql-contrib
@@ -70,8 +67,20 @@
     - name: 
       sudo: true
       apt: deb=/home/vagrant/go-server-14.1.0-18882.deb dpkg_options=force-confdef
+      notify:
+        - start go-server
+
     
     - name:
       sudo: true
-      apt: deb=/home/vagrant/go-agent-14.1.0-18882.deb
+      apt: deb=/home/vagrant/go-agent-14.1.0-18882.deb dpkg_options=force-confdef
+      notify:
+        - start go-agent
+    - name:
+      sudo: yes
+      service: name=go-agent state=started      
+    - name: start go-server
+      sudo: yes
+      service: name=go-server state=started
+      
       
