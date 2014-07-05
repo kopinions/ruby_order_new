@@ -4,6 +4,9 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id].to_i)
   end
 
+  def create
+    head 201
+  end
   private
     def not_found
       head 404
