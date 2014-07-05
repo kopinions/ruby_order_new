@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
 
   def payment
     @order.create_payment(params.require(:payment).permit(:amount, :pay_type))
-    head 201
+    head 201, location: payment_user_order_path(@user, @order)
   end
 
   private
