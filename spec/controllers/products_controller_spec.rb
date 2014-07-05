@@ -41,10 +41,31 @@ RSpec.describe ProductsController, :type => :controller do
     context 'with one product in fixture' do
       before {
         get :index, format: :json
+        @products = JSON.parse(response.body)
       }
 
       it 'should return 200' do
         expect(response).to have_http_status 200
+      end
+
+      it 'should return 1 product' do
+        expect(@products.length).to eq(1)
+      end
+
+      it 'should have product name' do
+        expect(@products[0]).to have_key('name')
+      end
+
+      it 'should have product description' do
+        expect(@products[0]).to have_key('description')
+      end
+
+      it 'should have product uri' do
+        expect(@products[0]).to have_key('uri')
+      end
+
+      it 'should uri correct format' do
+        expect(@products[0]['uri']).to match(%r{/products/\d+})
       end
     end
   end

@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
   end
 
   def index
-    head 200
+    @products = Product.all()
   end
 
   private
