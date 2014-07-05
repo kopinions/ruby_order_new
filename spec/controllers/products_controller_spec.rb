@@ -40,11 +40,17 @@ RSpec.describe ProductsController, :type => :controller do
   describe 'POST' do
     context 'post to create' do
       before {
+        expect(Product).to receive(:new).with({name: 'name', description: 'description'}).and_call_original
+        expect_any_instance_of(Product).to receive(:save).and_call_original
         post :create , product: {name: 'name', description: 'description'}
       }
 
       it 'should return 201' do
         expect(response).to have_http_status 201
+      end
+
+      it 'should return uri' do
+        expect(response['Location']).to match(%r{products/\d*})
       end
     end
   end

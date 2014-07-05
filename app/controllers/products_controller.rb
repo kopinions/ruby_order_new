@@ -5,7 +5,9 @@ class ProductsController < ApplicationController
   end
 
   def create
-    head 201
+    product = Product.new(params.require('product').permit('name', 'description'))
+    product.save
+    head 201, location: product_path(product)
   end
   private
     def not_found
