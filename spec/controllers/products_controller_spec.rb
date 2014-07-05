@@ -37,6 +37,18 @@ RSpec.describe ProductsController, :type => :controller do
     end
   end
 
+  describe 'GET index' do
+    context 'with one product in fixture' do
+      before {
+        get :index, format: :json
+      }
+
+      it 'should return 200' do
+        expect(response).to have_http_status 200
+      end
+    end
+  end
+
   describe 'POST' do
     context 'post to create' do
       before {

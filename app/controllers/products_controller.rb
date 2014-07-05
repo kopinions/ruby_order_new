@@ -9,6 +9,11 @@ class ProductsController < ApplicationController
     product.save
     head 201, location: product_path(product)
   end
+
+  def index
+    head 200
+  end
+
   private
     def not_found
       head 404
