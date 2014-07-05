@@ -1,5 +1,6 @@
 buy_ruby:
   id: 2
+  user_id: 1
   address: 'beijing'
   name: 'sofia'
   phone: '13512348765'

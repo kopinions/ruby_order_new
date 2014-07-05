@@ -78,16 +78,36 @@ RSpec.describe OrdersController, :type => :controller do
         end
 
         it 'should create order a order for sofia' do
-          expect(users(:sofia).orders.length).to eq(1)
+          expect(users(:sofia).orders.length).to eq(2)
         end
 
         it 'should order have one order item' do
-          expect(users(:sofia).orders[0].order_items.length).to eq(1)
+          expect(users(:sofia).orders[1].order_items.length).to eq(1)
         end
 
         it 'should order item info equal to send' do
-          expect(users(:sofia).orders[0].order_items[0].product_id).to eq(1)
-          expect(users(:sofia).orders[0].order_items[0].quantity).to eq(2)
+          expect(users(:sofia).orders[1].order_items[0].product_id).to eq(1)
+          expect(users(:sofia).orders[1].order_items[0].quantity).to eq(2)
+        end
+      end
+    end
+  end
+
+  describe 'Create Payment' do
+    context 'with exist user' do
+      before {
+        expect(User).to receive(:find).with(1).and_return(users(:sofia))
+      }
+      context 'with exist order' do
+        context 'post payment' do
+          before {
+            expect(Payment).to receive(:new).with({amount:100, pay_type: 'CASH'}).and_call_original
+            post :payment, id: 2, user_id: 1, format: :json, payment: {amount: 100, pay_type: 'CASH'}
+          }
+
+          it 'should create payment for order' do
+            expect(response).to have_http_status 201
+          end
         end
       end
     end
