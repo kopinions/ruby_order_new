@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ProductController, :type => :controller do
+RSpec.describe ProductsController, :type => :controller do
   render_views
   fixtures :all
   describe 'GET' do
@@ -19,6 +19,10 @@ RSpec.describe ProductController, :type => :controller do
       end
       it 'should return description' do
         expect(@product['description']).to eq('ruby book')
+      end
+
+      it 'should return uri' do
+        expect(@product['uri']).to end_with('/products/1')
       end
     end
 

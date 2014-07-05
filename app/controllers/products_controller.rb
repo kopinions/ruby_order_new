@@ -1,4 +1,4 @@
-class ProductController < ApplicationController
+class ProductsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   def show
     @product = Product.find(params[:id].to_i)
