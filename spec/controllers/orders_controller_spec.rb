@@ -93,7 +93,7 @@ RSpec.describe OrdersController, :type => :controller do
     end
   end
 
-  describe 'Create Payment' do
+  describe 'Payment' do
     context 'with exist user' do
       before {
         expect(User).to receive(:find).with(1).and_return(users(:sofia))
@@ -113,6 +113,17 @@ RSpec.describe OrdersController, :type => :controller do
             expect(response['Location']).to end_with('/users/1/orders/2/payment')
           end
         end
+
+        context 'get payment' do
+          before {
+            get :payment, user_id: 1, id: 2, format: :json
+          }
+
+          it 'should get 200' do
+            expect(response).to have_http_status 200
+          end
+        end
+
       end
     end
   end
