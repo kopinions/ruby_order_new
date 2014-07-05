@@ -53,4 +53,23 @@ RSpec.describe OrdersController, :type => :controller do
       end
     end
   end
+
+  describe 'POST' do
+    context 'with exist user' do
+      before {
+        expect(User).to receive(:find).with(1).and_return(users(:sofia))
+      }
+
+      context 'post to create' do
+        before {
+          post :create, user_id: 1, address: 'beijing', phone: '13211112222', name: 'kayla'
+
+        }
+
+        it 'should get 201' do
+          expect(response).to have_http_status 201
+        end
+      end
+    end
+  end
 end
