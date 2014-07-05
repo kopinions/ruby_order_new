@@ -8,7 +8,13 @@ class OrdersController < ApplicationController
   end
 
   def create
-    head 201
+    order = Order.create(params.require(:order).permit(:address, :name, :phone))
+    order_items = params.require(:order).permit(:order_items => [:product_id, :quantity])
+    order_items['order_items'].each do |order_item|
+      order.order_items.create(order_item)
+    end
+    @user.orders << order
+    head 201, location: user_order_path(@user, order)
   end
 
   private

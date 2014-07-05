@@ -62,12 +62,32 @@ RSpec.describe OrdersController, :type => :controller do
 
       context 'post to create' do
         before {
-          post :create, user_id: 1, address: 'beijing', phone: '13211112222', name: 'kayla'
-
+          expect(Order).to receive(:new).with({address: 'beijing', phone: '13211112222', name: 'kayla'}).and_call_original
+          # why 2, it is because the first time is use to save order, the second
+          # time is use to save the user_id in the order
+          expect_any_instance_of(Order).to receive(:save).exactly(2).and_call_original
+          post :create, user_id: 1, order: {address: 'beijing', phone: '13211112222', name: 'kayla', order_items: [{product_id: 1, quantity: 2}]}
         }
 
         it 'should get 201' do
           expect(response).to have_http_status 201
+        end
+
+        it 'should return location' do
+          expect(response['Location']).to match(%r{users/1/orders/\d*})
+        end
+
+        it 'should create order a order for sofia' do
+          expect(users(:sofia).orders.length).to eq(1)
+        end
+
+        it 'should order have one order item' do
+          expect(users(:sofia).orders[0].order_items.length).to eq(1)
+        end
+
+        it 'should order item info equal to send' do
+          expect(users(:sofia).orders[0].order_items[0].product_id).to eq(1)
+          expect(users(:sofia).orders[0].order_items[0].quantity).to eq(2)
         end
       end
     end
