@@ -4,8 +4,7 @@ class OrdersController < ApplicationController
 
 
   def show
-    order_find = Order.find(params[:id].to_i)
-    head 200
+    @order = Order.find(params[:id].to_i)
   end
 
   private
