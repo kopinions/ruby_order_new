@@ -1,0 +1,77 @@
+---
+- hosts: localenv
+  user: vagrant
+  sudo: True
+  tasks:
+    - name: update env 
+      apt: update_cache=yes 
+
+    - name: install postgres
+      apt: pkg={{item}} state=present
+      with_items:
+        - postgresql
+        - postgresql-contrib
+        - python-psycopg2
+
+    - name: Make sure postgres running
+      service: name=postgresql state=started enabled=yes
+
+    - name: mange postgres user
+      sudo_user: postgres
+      postgresql_user: name=twer password=twer role_attr_flags=SUPERUSER 
+
+    - name: create default db
+      sudo_user: postgres
+      postgresql_db: name=order
+
+    - name: install env 
+      apt: pkg={{item}} state=present
+      with_items:
+        - git
+
+    - name: ensure known hosts
+      sudo_user: vagrant
+      shell: touch ~/.ssh/known_hosts
+
+    - name: remove github.com from known host
+      sudo_user: vagrant
+      shell: ssh-keygen -R github.com
+
+    - name: add remote ssh key
+      sudo_user: vagrant
+      shell: /usr/bin/ssh-keyscan -H github.com >> ~/.ssh/ssh_known_hosts
+
+    - name: clone repository
+      sudo_user: vagrant
+      git: repo=https://github.com/sjkyspa/ruby_order_new.git dest=~/ruby_order_new update=no
+  
+    - name: copy go
+      sudo_user: vagrant
+      copy: src=/Users/twer/Downloads/go-server-14.1.0-18882.deb dest=~/ owner=vagrant
+    - name: copy go agent
+      sudo_user: vagrant
+      copy: src=/Users/twer/Downloads/go-agent-14.1.0-18882.deb dest=~/ owner=vagrant
+
+    - name: add repo for java 8
+      apt_repository: repo='ppa:webupd8team/java' state=present
+
+    - name: set licence selected
+      shell: /bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+      sudo: yes
+
+    - name: set licence seen
+      shell: /bin/echo debconf shared/accepted-oracle-license-v1-1 seen true | /usr/bin/debconf-set-selections
+      sudo: yes
+
+    - name: install java 8
+      apt: name=oracle-java8-installer state=latest update-cache=yes force=yes
+      sudo: yes
+
+    - name: 
+      sudo: true
+      apt: deb=/home/vagrant/go-server-14.1.0-18882.deb dpkg_options=force-confdef
+    
+    - name:
+      sudo: true
+      apt: deb=/home/vagrant/go-agent-14.1.0-18882.deb
+      
