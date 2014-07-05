@@ -18,7 +18,9 @@ class OrdersController < ApplicationController
 
   def payment
     if request.method == 'GET'
-      return head 200
+      @payment = @order.payment
+      render 'orders/payment'
+      return
     end
     @order.create_payment(params.require(:payment).permit(:amount, :pay_type))
     head 201, location: payment_user_order_path(@user, @order)

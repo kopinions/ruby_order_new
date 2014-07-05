@@ -117,10 +117,27 @@ RSpec.describe OrdersController, :type => :controller do
         context 'get payment' do
           before {
             get :payment, user_id: 1, id: 2, format: :json
+            @payment = JSON.parse(response.body)
           }
 
           it 'should get 200' do
             expect(response).to have_http_status 200
+          end
+
+          it 'should have amount' do
+            expect(@payment).to have_key('amount')
+          end
+
+          it 'should have pay_type' do
+            expect(@payment).to have_key('pay_type')
+          end
+
+          it 'should have uri' do
+            expect(@payment).to have_key('uri')
+          end
+
+          it 'should uri in correct format' do
+            expect(@payment['uri']).to end_with('/users/1/orders/2/payment')
           end
         end
 

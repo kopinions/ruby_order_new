@@ -1,0 +1,4 @@
+payment_for_buy_ruby:
+  order_id: 2
+  amount: 100
+  pay_type: 'CASH'
